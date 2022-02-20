@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
   tx_rate = ((uint16_t *)(cfg + 18));
   tx_cntr = ((uint16_t *)(sts + 2));
 
-  /* set PTT pin to low */
+  /* set band data to 0 */
   *gpio = 0;
 
   /* set default rx phase increment */
@@ -184,6 +184,26 @@ void *rx_ctrl_handler(void *arg)
         if(freq < freq_min || freq > freq_max) continue;
         *rx_freq = (uint32_t)floor(freq/122.88e6*(1<<30)+0.5);
         *rx_sync = freq > 0 ? 0 : 1;
+        
+        /* set band bcd-encoded to gpio */
+        if(freq < 2750000)
+          *gpio = 1; /* 1.8 */
+        else if(freq < 5500000)
+          *gpio = 2; /* 3.5 */
+        else if(freq < 8500000)
+          *gpio = 3; /* 7 */
+        else if(freq < 12000000)
+          *gpio = 4; /* 10 */
+        else if(freq < 16000000)
+          *gpio = 5; /* 14 */
+        else if(freq < 19500000)
+          *gpio = 6; /* 18 */
+        else if(freq < 22500000)
+          *gpio = 7; /* 21 */
+        else if(freq < 26000000)
+          *gpio = 8; /* 24 */
+        else
+          *gpio = 9; /* 28 */
         break;
       case 1:
         /* set rx sample rate */
@@ -260,7 +280,7 @@ void *tx_ctrl_handler(void *arg)
   int sock_client = sock_thread[2];
   uint32_t command, freq;
 
-  /* set PTT pin to low */
+  /* set band data to 0 */
   *gpio = 0;
   /* set default tx phase increment */
   *tx_freq = (uint32_t)floor(600000/122.88e6*(1<<30)+0.5);
@@ -307,6 +327,7 @@ void *tx_ctrl_handler(void *arg)
             break;
         }
         break;
+#if 0	/* don't take control of ptt */
       case 2:
         /* set PTT pin to high */
         *gpio = 1;
@@ -315,10 +336,11 @@ void *tx_ctrl_handler(void *arg)
         /* set PTT pin to low */
         *gpio = 0;
         break;
+#endif
     }
   }
 
-  /* set PTT pin to low */
+  /* set band data back to 0 */
   *gpio = 0;
   /* set default tx phase increment */
   *tx_freq = (uint32_t)floor(600000/122.88e6*(1<<30)+0.5);
