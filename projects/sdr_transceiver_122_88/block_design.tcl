@@ -128,13 +128,13 @@ addr 0x40000000 4K sts_0/S_AXI /ps_0/M_AXI_GP0
 delete_bd_objs [get_bd_ports exp_p_tri_io]
 
 # Create output port
-create_bd_port -dir O -from 1 -to 0 exp_p_tri_io
+create_bd_port -dir O -from 7 -to 0 exp_p_tri_io
 
 # Create xlconcat
 cell xilinx.com:ip:xlconcat concat_1 {
   NUM_PORTS 2
-  IN0_WIDTH 1
-  IN1_WIDTH 1
+  IN0_WIDTH 4
+  IN1_WIDTH 4
 } {
   dout exp_p_tri_io
 }

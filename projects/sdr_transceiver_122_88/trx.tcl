@@ -22,7 +22,7 @@ cell pavel-demin:user:port_slicer rst_slice_1 {
 
 # Create port_slicer
 cell pavel-demin:user:port_slicer out_slice_0 {
-  DIN_WIDTH 160 DIN_FROM 16 DIN_TO 16
+  DIN_WIDTH 160 DIN_FROM 19 DIN_TO 16
 } {
   din cfg_0/cfg_data
 }
